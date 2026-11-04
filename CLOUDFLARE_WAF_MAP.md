@@ -134,6 +134,46 @@ signature never fires. Payload reaches origin intact as raw bytes.
 - `<script>`/`</script>` literal and `%u003c` forms (CF implements IE-era `%uXXXX` decoding).
 - `or 1=1`, `union all select`, `benchmark(...)` context patterns.
 
+## ROUND 3 - CONFIG-FILE ENCODING SWEEP (waf_config_enc.py, config_enc_round3.txt, config_enc_results.json)
+
+Earlier dotfile claims were re-run with a corrected CF-vs-origin discriminator
+(CF block pages contain "Access denied" + __CF$cv$params; Symfony has its own error pages).
+260 probes across .env .gitignore .git/config .htaccess composer.json web.config
+config.yml parameters.yml .aws/credentials wp-config.php .DS_Store phpunit.xml .bashrc
+x 20 encodings each. Results:
+
+1. CF dotfile rules are prefix/extension-based, NOT exact-string. Evidence:
+   /x.env, /my.env, /production.env, /.env.local, /.env.bak all reach origin -> the rule
+   matches ".env" as a substring/suffix pattern, so any encoding preserving the literal
+   token hits it. BUT invisible-char insertion breaks adjacency: ZWSP / soft-hyphen / TAG
+   interspersion BETWEEN EVERY CHARACTER bypasses CF for ALL 13 config names
+   (Round 3 table: every zwsp-every/shy-every/tag-every probe reached origin). The earlier
+   round-2 claim that zwsp-inside-dotfile failed was a discriminator artifact (origin's
+   own 403 page also contains 'Access denied'); Round 3 fixed the fingerprint and confirms
+   full-split payloads reach origin every time.
+
+2. What stays blocked at CF edge for config files: standard hex pct (%2e, %65...),
+   trailing-dot, Windows ADS ::$DATA, ;params, double-slash, backslash, case variants,
+   and NUL/tab/CRLF insertion inside .env. Note the asymmetry vs SQLi rules: dotfile
+   signatures normalize MORE separator classes (they strip control bytes too), while the
+   SQL whitespace dictionary is narrower - so the same trick works in one family only.
+
+3. Origin has its OWN independent config protection (defense-in-depth):
+   - ANY path ending .env (even /foo.env, /config.env) -> origin 403
+   - /.git/*, /php.ini, /config.php, /settings.php, /composer.lock, /phpinfo() -> origin 403
+   - Bypassed-at-CF payloads (zwsp-split names) arrive at origin as literally different
+     filenames -> 404. No reconstruction: nginx/Symfony do NOT fold ZWSP/SHY/TAG chars
+     away before file resolution.
+   - Non-existent names (/symfony.lock, /backup.zip, /dump.sql, /var/cache/...) -> 404,
+     confirming the 403s above are deny-rules, not blanket blocks.
+
+NET CONCLUSION FOR CONFIG FILES: compact agnostic encodings (one-codepoint invisible
+interspersion, ~3 bytes overhead per char) reliably defeat CF dotfile signatures - the
+WAF gap is systematic across SQLi, XSS, AND config families. Exposure would require an
+origin layer that unicode-normalizes invisibles back to ASCII before routing/file lookup;
+this stack does not, so every bypassed config probe dies as 404/403 at the app itself.
+CF-only deployments would be fully exposed by these same interspersion tricks.
+
 ### Reconstruction analysis (the user's hypothesis)
 
 The hypothesis "encode around the WAF, reconstruct at the origin" holds mechanically for

@@ -1,0 +1,1068 @@
+{
+ ".env": {
+  "plain(control)": [
+   "403",
+   "cf-edge"
+  ],
+  "hex-all": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-dot": [
+   "404",
+   "origin"
+  ],
+  "overlong-2byte-dot": [
+   "404",
+   "origin"
+  ],
+  "fullwidth-dot": [
+   "404",
+   "origin"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "ADS": [
+   "403",
+   "cf-edge"
+  ],
+  "semicolon-param": [
+   "403",
+   "cf-edge"
+  ],
+  "double-slash": [
+   "403",
+   "cf-edge"
+  ],
+  "backslash": [
+   "403",
+   "cf-edge"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "403",
+   "cf-edge"
+  ],
+  "case-mixed": [
+   "403",
+   "cf-edge"
+  ],
+  "tab-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "crlf-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "softhyphen-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-e": [
+   "404",
+   "origin"
+  ]
+ },
+ ".gitignore": {
+  "plain(control)": [
+   "403",
+   "cf-edge"
+  ],
+  "hex-all": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-dot": [
+   "404",
+   "origin"
+  ],
+  "overlong-2byte-dot": [
+   "404",
+   "origin"
+  ],
+  "fullwidth-dot": [
+   "404",
+   "origin"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "ADS": [
+   "403",
+   "cf-edge"
+  ],
+  "semicolon-param": [
+   "403",
+   "cf-edge"
+  ],
+  "double-slash": [
+   "403",
+   "cf-edge"
+  ],
+  "backslash": [
+   "404",
+   "origin"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "403",
+   "cf-edge"
+  ],
+  "case-mixed": [
+   "403",
+   "cf-edge"
+  ],
+  "tab-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "crlf-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "softhyphen-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-e": [
+   "404",
+   "origin"
+  ]
+ },
+ ".git/config": {
+  "plain(control)": [
+   "403",
+   "cf-edge"
+  ],
+  "hex-all": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-dot": [
+   "404",
+   "origin"
+  ],
+  "overlong-2byte-dot": [
+   "404",
+   "origin"
+  ],
+  "fullwidth-dot": [
+   "404",
+   "origin"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "ADS": [
+   "403",
+   "cf-edge"
+  ],
+  "semicolon-param": [
+   "403",
+   "cf-edge"
+  ],
+  "double-slash": [
+   "403",
+   "cf-edge"
+  ],
+  "backslash": [
+   "403",
+   "cf-edge"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "403",
+   "cf-edge"
+  ],
+  "case-mixed": [
+   "403",
+   "cf-edge"
+  ],
+  "tab-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "crlf-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "softhyphen-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-e": [
+   "404",
+   "origin"
+  ]
+ },
+ ".htaccess": {
+  "plain(control)": [
+   "403",
+   "cf-edge"
+  ],
+  "hex-all": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-dot": [
+   "404",
+   "origin"
+  ],
+  "overlong-2byte-dot": [
+   "404",
+   "origin"
+  ],
+  "fullwidth-dot": [
+   "404",
+   "origin"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "ADS": [
+   "403",
+   "cf-edge"
+  ],
+  "semicolon-param": [
+   "403",
+   "cf-edge"
+  ],
+  "double-slash": [
+   "403",
+   "cf-edge"
+  ],
+  "backslash": [
+   "403",
+   "cf-edge"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "403",
+   "cf-edge"
+  ],
+  "case-mixed": [
+   "403",
+   "cf-edge"
+  ],
+  "tab-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "crlf-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "softhyphen-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-e": [
+   "404",
+   "origin"
+  ]
+ },
+ "composer.json": {
+  "plain(control)": [
+   "403",
+   "cf-edge"
+  ],
+  "hex-all": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-dot": [
+   "404",
+   "origin"
+  ],
+  "overlong-2byte-dot": [
+   "404",
+   "origin"
+  ],
+  "fullwidth-dot": [
+   "404",
+   "origin"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "404",
+   "origin"
+  ],
+  "ADS": [
+   "404",
+   "origin"
+  ],
+  "semicolon-param": [
+   "404",
+   "origin"
+  ],
+  "double-slash": [
+   "403",
+   "cf-edge"
+  ],
+  "backslash": [
+   "404",
+   "origin"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "403",
+   "cf-edge"
+  ],
+  "case-mixed": [
+   "403",
+   "cf-edge"
+  ],
+  "tab-inside": [
+   "404",
+   "origin"
+  ],
+  "crlf-inside": [
+   "404",
+   "origin"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "404",
+   "origin"
+  ],
+  "softhyphen-inside": [
+   "404",
+   "origin"
+  ],
+  "overlong-e": [
+   "404",
+   "origin"
+  ]
+ },
+ "web.config": {
+  "plain(control)": [
+   "403",
+   "cf-edge"
+  ],
+  "hex-all": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-2byte-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "fullwidth-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "404",
+   "origin"
+  ],
+  "ADS": [
+   "404",
+   "origin"
+  ],
+  "semicolon-param": [
+   "404",
+   "origin"
+  ],
+  "double-slash": [
+   "403",
+   "cf-edge"
+  ],
+  "backslash": [
+   "403",
+   "cf-edge"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "403",
+   "cf-edge"
+  ],
+  "case-mixed": [
+   "403",
+   "cf-edge"
+  ],
+  "tab-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "crlf-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "softhyphen-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-e": [
+   "403",
+   "cf-edge"
+  ]
+ },
+ "config.yml": {
+  "plain(control)": [
+   "403",
+   "cf-edge"
+  ],
+  "hex-all": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-2byte-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "fullwidth-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "404",
+   "origin"
+  ],
+  "ADS": [
+   "404",
+   "origin"
+  ],
+  "semicolon-param": [
+   "404",
+   "origin"
+  ],
+  "double-slash": [
+   "403",
+   "cf-edge"
+  ],
+  "backslash": [
+   "403",
+   "cf-edge"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "403",
+   "cf-edge"
+  ],
+  "case-mixed": [
+   "403",
+   "cf-edge"
+  ],
+  "tab-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "crlf-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "softhyphen-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-e": [
+   "403",
+   "cf-edge"
+  ]
+ },
+ "parameters.yml": {
+  "plain(control)": [
+   "403",
+   "cf-edge"
+  ],
+  "hex-all": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-2byte-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "fullwidth-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "404",
+   "origin"
+  ],
+  "ADS": [
+   "404",
+   "origin"
+  ],
+  "semicolon-param": [
+   "404",
+   "origin"
+  ],
+  "double-slash": [
+   "403",
+   "cf-edge"
+  ],
+  "backslash": [
+   "403",
+   "cf-edge"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "403",
+   "cf-edge"
+  ],
+  "case-mixed": [
+   "403",
+   "cf-edge"
+  ],
+  "tab-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "crlf-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "softhyphen-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-e": [
+   "403",
+   "cf-edge"
+  ]
+ },
+ ".aws/credentials": {
+  "plain(control)": [
+   "403",
+   "cf-edge"
+  ],
+  "hex-all": [
+   "404",
+   "origin"
+  ],
+  "overlong-dot": [
+   "404",
+   "origin"
+  ],
+  "overlong-2byte-dot": [
+   "404",
+   "origin"
+  ],
+  "fullwidth-dot": [
+   "404",
+   "origin"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "ADS": [
+   "403",
+   "cf-edge"
+  ],
+  "semicolon-param": [
+   "403",
+   "cf-edge"
+  ],
+  "double-slash": [
+   "403",
+   "cf-edge"
+  ],
+  "backslash": [
+   "404",
+   "origin"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "403",
+   "cf-edge"
+  ],
+  "case-mixed": [
+   "403",
+   "cf-edge"
+  ],
+  "tab-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "crlf-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "softhyphen-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-e": [
+   "404",
+   "origin"
+  ]
+ },
+ "wp-config.php": {
+  "plain(control)": [
+   "403",
+   "cf-edge"
+  ],
+  "hex-all": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-2byte-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "fullwidth-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "ADS": [
+   "403",
+   "cf-edge"
+  ],
+  "semicolon-param": [
+   "403",
+   "cf-edge"
+  ],
+  "double-slash": [
+   "403",
+   "cf-edge"
+  ],
+  "backslash": [
+   "403",
+   "cf-edge"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "403",
+   "cf-edge"
+  ],
+  "case-mixed": [
+   "403",
+   "cf-edge"
+  ],
+  "tab-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "crlf-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "softhyphen-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-e": [
+   "403",
+   "cf-edge"
+  ]
+ },
+ ".DS_Store": {
+  "plain(control)": [
+   "403",
+   "cf-edge"
+  ],
+  "hex-all": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-dot": [
+   "404",
+   "origin"
+  ],
+  "overlong-2byte-dot": [
+   "404",
+   "origin"
+  ],
+  "fullwidth-dot": [
+   "404",
+   "origin"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "ADS": [
+   "403",
+   "cf-edge"
+  ],
+  "semicolon-param": [
+   "403",
+   "cf-edge"
+  ],
+  "double-slash": [
+   "403",
+   "cf-edge"
+  ],
+  "backslash": [
+   "403",
+   "cf-edge"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "403",
+   "cf-edge"
+  ],
+  "case-mixed": [
+   "403",
+   "cf-edge"
+  ],
+  "tab-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "crlf-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "softhyphen-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-e": [
+   "404",
+   "origin"
+  ]
+ },
+ "phpunit.xml": {
+  "plain(control)": [
+   "404",
+   "origin"
+  ],
+  "hex-all": [
+   "404",
+   "origin"
+  ],
+  "overlong-dot": [
+   "404",
+   "origin"
+  ],
+  "overlong-2byte-dot": [
+   "404",
+   "origin"
+  ],
+  "fullwidth-dot": [
+   "404",
+   "origin"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "404",
+   "origin"
+  ],
+  "ADS": [
+   "404",
+   "origin"
+  ],
+  "semicolon-param": [
+   "404",
+   "origin"
+  ],
+  "double-slash": [
+   "404",
+   "origin"
+  ],
+  "backslash": [
+   "404",
+   "origin"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "404",
+   "origin"
+  ],
+  "case-mixed": [
+   "404",
+   "origin"
+  ],
+  "tab-inside": [
+   "404",
+   "origin"
+  ],
+  "crlf-inside": [
+   "404",
+   "origin"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "404",
+   "origin"
+  ],
+  "softhyphen-inside": [
+   "404",
+   "origin"
+  ],
+  "overlong-e": [
+   "404",
+   "origin"
+  ]
+ },
+ ".bashrc": {
+  "plain(control)": [
+   "403",
+   "cf-edge"
+  ],
+  "hex-all": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-dot": [
+   "404",
+   "origin"
+  ],
+  "overlong-2byte-dot": [
+   "404",
+   "origin"
+  ],
+  "fullwidth-dot": [
+   "404",
+   "origin"
+  ],
+  "nul-suffix": [
+   "400",
+   "origin"
+  ],
+  "trailing-dot": [
+   "403",
+   "cf-edge"
+  ],
+  "ADS": [
+   "403",
+   "cf-edge"
+  ],
+  "semicolon-param": [
+   "403",
+   "cf-edge"
+  ],
+  "double-slash": [
+   "403",
+   "cf-edge"
+  ],
+  "backslash": [
+   "403",
+   "cf-edge"
+  ],
+  "pct-dot-only": [
+   "403",
+   "cf-edge"
+  ],
+  "uppercase": [
+   "403",
+   "cf-edge"
+  ],
+  "case-mixed": [
+   "403",
+   "cf-edge"
+  ],
+  "tab-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "crlf-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "nul-inside": [
+   "400",
+   "origin"
+  ],
+  "zwsp-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "softhyphen-inside": [
+   "403",
+   "cf-edge"
+  ],
+  "overlong-e": [
+   "404",
+   "origin"
+  ]
+ }
+}
