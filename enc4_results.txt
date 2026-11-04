@@ -1,0 +1,25 @@
+TEST                         CODE  RESULT
+----------------------------------------------------
+lfi %E2%80%8B colon          200   REACHED-ORIGIN
+lfi fullwidth colon          200   REACHED-ORIGIN
+lfi small colon U+FE13       200   REACHED-ORIGIN
+lfi slash U+2044             200   REACHED-ORIGIN
+lti div char U+2024          200   REACHED-ORIGIN
+select..from sep class       200   REACHED-ORIGIN
+drop table zwsp              200   REACHED-ORIGIN
+insert into zwsp             200   REACHED-ORIGIN
+exec xp_cmdshell nbsp        403   BLOCKED-BY-WAF
+benchmark space-class        200   REACHED-ORIGIN
+sleep concat zwsp            200   REACHED-ORIGIN
+svg onload em-space          200   REACHED-ORIGIN
+img onerror ideographic      200   REACHED-ORIGIN
+body onload hair-space       200   REACHED-ORIGIN
+dot z.w.s.p in .env          403   BLOCKED-BY-WAF
+dot fullwidth dot            404   REACHED-ORIGIN
+dot halfwidth ideograph      404   REACHED-ORIGIN
+dot chinese full stop        404   REACHED-ORIGIN
+ctrl ESC pct-encoded         200   REACHED-ORIGIN
+ctrl BEL pct-encoded         200   REACHED-ORIGIN
+ctrl SOH pct-encoded         200   REACHED-ORIGIN
+overlong C1 80 space         200   REACHED-ORIGIN
+cesu mixed E0 80 A0          200   REACHED-ORIGIN

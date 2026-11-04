@@ -83,3 +83,63 @@ Requests stopped at the edge never touch the origin and lack the app's CSP.
 5. **Bypass surface:** business-logic endpoints (price feeds, order placement, balance
    changes) are invisible to CF's keyword list. Any logic flaw, IDOR, or mass-assignment
    issue there is protected only by the application itself, not the edge WAF.
+
+---
+
+## CUSTOM COMPACT/AGNOSTIC ENCODING RESEARCH (Round 2)
+
+Goal: find encodings that *reconstruct* into a blocked signature at some downstream layer
+while evading CF's static matcher. Scripts: `waf_custom_enc.py` … `waf_custom_enc5.py`,
+raw results in `enc2_results.txt`–`enc5_results.txt`.
+
+### The separator-class bypass (root cause discovered)
+
+CF normalizes percent-encoded whitespace/control separators before matching, but its
+normalization dictionary is finite. Anything outside it breaks the token adjacency the
+signature depends on:
+
+| Separator substituted for the space in `union select` | Result |
+|---|---|
+| `%20`, `+`, `%2b`, literal space | ❌ BLOCKED (normalized) |
+| `%09 %0a %0d %0b %0c %00` (SQL-legal whitespace/NUL) | ❌ BLOCKED (normalized — CF mirrors the SQL parser!) |
+| `%01 %02 %07 %0e %0f %1b %1f %7f` (other C0/C1 controls) | ✅ BYPASS → origin |
+| Overlong UTF-8 (`%C0%AF`, `%E0%80%9F`, `%C1%80`) | ✅ BYPASS → origin |
+| Unicode spaces: NBSP, en/em/thin/hair quad, U+2028/29, U+3000 | ✅ BYPASS → origin |
+| Invisible chars: ZWSP, ZWJ, WJ, soft-hyphen, BOM-inside, TAG chars | ✅ BYPASS → origin |
+| Double/triple URL-encode (`%2520`), `%u0020`, BOM prefix | ❌ BLOCKED (CF recursively decodes) |
+| MySQL comments `/**/`, `#` variants | mixed: `/**/` blocked, `%23` bypasses |
+
+**Key insight:** CF's rule engine treats exactly the whitespace set a SQL lexer treats
+(space, tab, LF, CR, VT, FF, NUL) as equivalent separators — so classic SQLi whitespace
+tricks are dead, but every *other* byte/codepoint silently splits the phrase and the
+signature never fires. Payload reaches origin intact as raw bytes.
+
+### Structural bypasses (not encoding, same effect)
+
+- Token wrapping: `(union)(select)` and `` `union``select` `` → origin (200).
+- Case-mixed wrapper words: `Php://Filter` → origin; but `unIoN SeLeCt` still blocked
+  (CF lowercases before matching keywords — case tricks alone fail).
+- `data:text/html;base64,...` → origin (CF matches decoded `<script>` only if it appears
+  literally after one decode pass; base64 content is not recursively decoded).
+- Fullwidth `<` `>` (`%EF%BC%9C`) → origin (browsers don't parse them, so no XSS risk,
+  but proves matcher is ASCII-literal).
+- Tag-name splitting with invisible chars (`<sv​g>`) → origin.
+
+### What stays rock-solid against every trick tried
+
+- Dotfile path rules: `.env` matched even through NUL/CRLF/tab insertion, trailing-dot,
+  `::$DATA`, `;sysprop`, double-slash, backslash. Only *full-decode-different* names
+  (overlong dot `%C0%AE`, fullwidth dot) reach origin — and they also fail to resolve at
+  the origin, so no real exposure.
+- `<script>`/`</script>` literal and `%u003c` forms (CF implements IE-era `%uXXXX` decoding).
+- `or 1=1`, `union all select`, `benchmark(...)` context patterns.
+
+### Reconstruction analysis (the user's hypothesis)
+
+The hypothesis "encode around the WAF, reconstruct at the origin" holds mechanically for
+the separator class — PHP/Symfony receives the raw bytes and many parsers (mb-normalizing
+libraries, ICU-based collators, legacy GBK/UTF-7 stacks) could re-fold unicode spaces to
+ASCII space. However this app uses Doctrine parameterized queries + Symfony's strict UTF-8
+request handling, so the delivered payload is treated as inert string data; overlong
+sequences are rejected/escaped rather than folded. No reconstruction-to-execution path was
+found. The WAF gap is real; the exploit gap is closed by the origin stack.

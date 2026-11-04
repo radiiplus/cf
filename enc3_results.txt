@@ -1,0 +1,37 @@
+TEST                         CODE  RESULT
+----------------------------------------------------
+ctrl char inside union       ?     BLOCKED-BY-WAF
+invalid utf8 C0 inside kw    ?     BLOCKED-BY-WAF
+overlong replaces SPACE      200   REACHED-ORIGIN
+overlong + legit space mix   ?     BLOCKED-BY-WAF
+fullwidth space U+3000       200   REACHED-ORIGIN
+ideographic space            200   REACHED-ORIGIN
+en-space U+2002              200   REACHED-ORIGIN
+em-space U+2003              200   REACHED-ORIGIN
+three-per-em U+2004          200   REACHED-ORIGIN
+four-per-em U+2005           200   REACHED-ORIGIN
+six-per-em U+2006            200   REACHED-ORIGIN
+figure sp U+2007             200   REACHED-ORIGIN
+punctuation sp U+2008        200   REACHED-ORIGIN
+thin sp U+2009               200   REACHED-ORIGIN
+hair sp U+200A               200   REACHED-ORIGIN
+line sep U+2028              200   REACHED-ORIGIN
+para sep U+2029              200   REACHED-ORIGIN
+LRE U+202A                   200   REACHED-ORIGIN
+RLO U+202E                   200   REACHED-ORIGIN
+word joiner U+2060           200   REACHED-ORIGIN
+invisible plus U+2064        200   REACHED-ORIGIN
+BOM U+FEFF prefix            403   BLOCKED-BY-WAF
+TAG chars U+E0020            200   REACHED-ORIGIN
+xss <script> fullwidth       200   REACHED-ORIGIN
+xss <script> tag-char        403   BLOCKED-BY-WAF
+xss <img> nul                403   BLOCKED-BY-WAF
+xss <svg> zwsp in name       200   REACHED-ORIGIN
+xss <svg onload>             200   REACHED-ORIGIN
+xss <svg onload> nbsp        200   REACHED-ORIGIN
+xss body background          200   REACHED-ORIGIN
+xss details ontoggle         200   REACHED-ORIGIN
+xss marquee onstart          200   REACHED-ORIGIN
+xss audio onerror            200   REACHED-ORIGIN
+xss select onchange          200   REACHED-ORIGIN
+xss isindex                  200   REACHED-ORIGIN

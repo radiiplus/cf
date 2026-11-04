@@ -1,0 +1,28 @@
+TEST                         CODE  RESULT
+----------------------------------------------------
+union%20select baseline      403   BLOCKED-BY-WAF
+union+select                 403   BLOCKED-BY-WAF
+union literal-space          ?     BLOCKED-BY-WAF
+union %09 tab                403   BLOCKED-BY-WAF
+union %0a LF                 403   BLOCKED-BY-WAF
+union %0d CR                 403   BLOCKED-BY-WAF
+union %0c FF                 403   BLOCKED-BY-WAF
+union %0b VT                 403   BLOCKED-BY-WAF
+union %00 NUL                403   BLOCKED-BY-WAF
+union %1b ESC                200   REACHED-ORIGIN
+union %07 BEL                200   REACHED-ORIGIN
+union %01 SOH                200   REACHED-ORIGIN
+union %02 STX                200   REACHED-ORIGIN
+union %0e SO                 200   REACHED-ORIGIN
+union %0f SI                 200   REACHED-ORIGIN
+union %1f US                 200   REACHED-ORIGIN
+union %7f DEL                200   REACHED-ORIGIN
+home page                    200   REACHED-ORIGIN
+markets page                 404   REACHED-ORIGIN
+zwsp inside UNION            ?     BLOCKED-BY-WAF
+zwsp both sides              200   REACHED-ORIGIN
+soft hyphen U+00AD           200   REACHED-ORIGIN
+no-break sp U+00A0           200   REACHED-ORIGIN
+ogham space mark U+1680      200   REACHED-ORIGIN
+en quad U+2000               200   REACHED-ORIGIN
+em quad U+2001               200   REACHED-ORIGIN
