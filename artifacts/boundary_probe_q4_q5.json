@@ -1,0 +1,24 @@
+{
+ "Q4": {
+  "long_lived_decoder_escape_vs_literal_same_object": false,
+  "module_loads_control_same_object": false,
+  "label": "NOT PROVEN: even long-lived decoder does not share escape/literal slot",
+  "repeat_key_same_object_across_parses_longlived": false,
+  "refined_matrix": {
+   "C_scanner_repeat_key_across_parses_longlived": false,
+   "py_scanner_repeat_key_across_parses_same_decoder": false,
+   "py_scanner_same_key_within_one_parse": true,
+   "memo_scope_conclusion": "per-parse (both implementations); SetDefault@0x3301 memo never crosses a parse boundary on 3.12.10"
+  }
+ },
+ "Q5": {
+  "err_doc_len": 5039,
+  "input_len": 5039,
+  "full_buffer_retained": true,
+  "pos": 5039,
+  "lineno": 1,
+  "colno": 5040,
+  "doc_is_same_object_as_input": true,
+  "label": "PROVEN: entire request buffer + precise failure coordinate escape inside the exception object"
+ }
+}
