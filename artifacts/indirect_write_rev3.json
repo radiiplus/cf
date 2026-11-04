@@ -1,0 +1,88 @@
+{
+  "python": "3.12.10 (main, Apr  9 2025, 00:30:28) [GCC 12.2.0]",
+  "impl": "py-only",
+  "hypothesis": "input-induced state transitions reach a modifying component without the validator holding write authority",
+  "W1_deferred_write": {
+    "committed_value": "attacker-chosen",
+    "input_literal_value": "safe",
+    "hook_returned_value": "attacker-chosen",
+    "VERDICT": "PROVEN",
+    "LABEL": "callback-mediated trigger / parser-native adoption: the parser's documented adoption of hook returns (PyDict result replaced at scan_once epilogue) determines WHICH value Component C commits; the write itself is application code.",
+    "falsifier": "commit shows 'safe' => hook return was not adopted downstream"
+  },
+  "W2_semantic_write": {
+    "policy_default_note": 1,
+    "policy_parse_int_note": "REINTERPRETED",
+    "raw_bytes_identical": true,
+    "VERDICT": "PROVEN",
+    "LABEL": "semantic write: input bytes unchanged; caller-configured decode policy changed how Component C interprets existing information.",
+    "caveat": "requires two consumers with DIFFERENT policies wired to the same signed bytes to escalate beyond configuration divergence."
+  },
+  "W3_preverdict_mutation": {
+    "doc_verdict": "rejected@pos22",
+    "hook_ran_before_rejection": true,
+    "mutated_external_list_len": 1,
+    "VERDICT": "PROVEN",
+    "LABEL": "construction/validation fusion consequence (documented behaviour): an operation outside the validator observes state written by a hook even though the document never passed validation."
+  },
+  "W4_resource_retention": {
+    "exc_doc_is_same_str_object": true,
+    "exc_doc_exact_length_match": true,
+    "traceback_frames_pinning_buffer_before_clear": [
+      "parse_and_keep",
+      "loads",
+      "decode",
+      "raw_decode"
+    ],
+    "strong_refs_remaining_after_source_and_frames_dropped": 5,
+    "buffer_survives_via_exception_only": false,
+    "VERDICT": "PARTIAL/FALSIFIED",
+    "LABEL": "resource-retention effect: input SHAPE (where corruption sits) determines whether the full authenticated buffer stays reachable; retention itself is the documented exception interface, the LEVERAGE is that a remote byte pattern controls another component's memory lifetime.",
+    "falsifier": "weakref dead while exception alive => exc.doc does not retain the buffer"
+  },
+  "W5_gc_finalizer_path": {
+    "test_created_finalizer_ran": true,
+    "parser_allocated_objects_have_user_finalizers": false,
+    "VERDICT": "NOT SUPPORTED as parser-induced",
+    "LABEL": "the __del__ that fired belongs to an object THIS TEST created. Parser-allocated dicts/lists/strs carry no user finalizers, so no evidence that parse-time allocation churn causes another component's finalizer to run with parse-controlled timing. Path left open only for caller-attached proxies, which is callback-mediated by definition."
+  },
+  "W6_lifecycle_control": {
+    "exception_types_by_input": {
+      "syntax_truncated": "JSONDecodeError",
+      "depth_400": "accepted",
+      "depth_950_C": "accepted",
+      "bad_escape": "JSONDecodeError",
+      "extra_data": "JSONDecodeError",
+      "depth_350_with_hook": "accepted"
+    },
+    "distinct_handler_branches_triggered": 2,
+    "VERDICT": "PROVEN",
+    "LABEL": "input shape chooses WHICH failure mode propagates to the error handler (Component C of this path); handlers classically perform different state transitions per exception type (log level, response class, retry semantics). Note depth_950_C accepted on this build \u2014 C scanner budget differs from py, consistent with rev2 divergence."
+  },
+  "W7_shared_key_identity": {
+    "same_object_across_parses": false,
+    "equal_value": true,
+    "VERDICT": "PROVEN-NEGATIVE (no cross-parse sharing; memo cleared per scan \u2014 consistent with rev1/rev2 findings)",
+    "LABEL": "identity channel closed across ordinary sequential parses; within a single scan escaped/literal forms DO share identity (rev1 M2)."
+  },
+  "W8_parser_native_lastwins_to_write": {
+    "signed_digest": "13c24a20ea9f",
+    "gate_route_first_occurrence": "ledger",
+    "committed_dest": "evil",
+    "dict_value_seen_by_consumer": "evil",
+    "commit_count": 1,
+    "VERDICT": "PROVEN",
+    "LABEL": "PARSER-NATIVE (no callback involved): PyDict_SetItem last-wins (disasm @0x4112) determines WHICH value reaches the state-changing component, while the authenticated bytes say otherwise. This is the Python twin of the Java DISAGREE artifact (target-replica).",
+    "falsifier": "committed 'safe' => last-wins did not propagate to the write"
+  },
+  "_summary": {
+    "W1_deferred_write": "PROVEN",
+    "W2_semantic_write": "PROVEN",
+    "W3_preverdict_mutation": "PROVEN",
+    "W4_resource_retention": "PARTIAL/FALSIFIED",
+    "W5_gc_finalizer_path": "NOT SUPPORTED as parser-induced",
+    "W6_lifecycle_control": "PROVEN",
+    "W7_shared_key_identity": "PROVEN-NEGATIVE (no cross-parse sharing; memo cleared per scan \u2014 consistent with rev1/rev2 findings)",
+    "W8_parser_native_lastwins_to_write": "PROVEN"
+  }
+}
