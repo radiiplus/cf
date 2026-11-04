@@ -1,3 +1,2 @@
-*.o
-disasm/peershim
-disasm/syscall_probe
+*.jar
+lib/
