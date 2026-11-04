@@ -1,0 +1,37 @@
+TEST                         CODE  RESULT
+--------------------------------------------------
+overlong lower %c0%af        200   REACHED-ORIGIN
+overlong upper %C0%AF        200   REACHED-ORIGIN
+overlong mixed %C0%af        200   REACHED-ORIGIN
+overlong E0809F alt          200   REACHED-ORIGIN
+overlong between words       200   REACHED-ORIGIN
+overlong inside word         ?     BLOCKED-BY-WAF
+zwsp between words           200   REACHED-ORIGIN
+zwj %e2%80%8d                200   REACHED-ORIGIN
+nbsp %c2%a0                  200   REACHED-ORIGIN
+thin space %e2%80%af         200   REACHED-ORIGIN
+ogham sp %e1%8d%a0           200   REACHED-ORIGIN
+or 1=1                       403   BLOCKED-BY-WAF
+union all select             403   BLOCKED-BY-WAF
+union/**/select comment      403   BLOCKED-BY-WAF
+union%23select hash          200   REACHED-ORIGIN
+seLenT case mix              403   BLOCKED-BY-WAF
+xss <scr<script>ipt> split   403   BLOCKED-BY-WAF
+xss svg animates             403   BLOCKED-BY-WAF
+xss img srcset no onerr      200   REACHED-ORIGIN
+xss math href                200   REACHED-ORIGIN
+xss form action              200   REACHED-ORIGIN
+xss noscript style           200   REACHED-ORIGIN
+xss title script leak        403   BLOCKED-BY-WAF
+xss iframe srcdoc            403   BLOCKED-BY-WAF
+xss template slot            200   REACHED-ORIGIN
+dot utf16 .env               400   BLOCKED-BY-WAF
+dot percent-in-percent       403   BLOCKED-BY-WAF
+dot unicode fullwidth d      404   REACHED-ORIGIN
+dot .env;sysprop             403   BLOCKED-BY-WAF
+dot .env::$DATA              403   BLOCKED-BY-WAF
+dot ..%3B.env                403   BLOCKED-BY-WAF
+dot double slash             403   BLOCKED-BY-WAF
+dot backslash                403   BLOCKED-BY-WAF
+dot tab in name              403   BLOCKED-BY-WAF
+dot crlf in name             403   BLOCKED-BY-WAF

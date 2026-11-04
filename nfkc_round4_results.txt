@@ -1,0 +1,9 @@
+sqli-nbsp-sep          HTTP=200  REACHED-ORIGIN(200)
+sqli-thin-sep          HTTP=200  REACHED-ORIGIN(200)
+sqli-fullwidth-kw      HTTP=200  REACHED-ORIGIN(200)
+sqli-fw-space          HTTP=200  REACHED-ORIGIN(200)
+dotfile-fw-dot         HTTP=404  REACHED-ORIGIN(404)
+dotfile-nbsp-env       HTTP=404  REACHED-ORIGIN(404)
+xss-svg-nbsp           HTTP=403  CF-WAF-BLOCK
+xss-svg-thin           HTTP=403  CF-WAF-BLOCK
+xss-onerror-thin       HTTP=403  CF-WAF-BLOCK
