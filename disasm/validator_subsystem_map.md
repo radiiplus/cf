@@ -1,3 +1,10 @@
+> **STATUS: §1–§2 SUPERSEDED.** The linear seven-component pipeline, the
+> "caller-supplied opcodes" framing, the two-hook callback inventory, and the
+> `PyObject_CallOneArg@0x456c` annotation are corrected in `REVISED_SUBSYSTEM_MAP.md`
+> (execution graph, five-callback inventory, number-routine attribution, reentrancy
+> results, withdrawal table). Boundary probes Q4/Q5 were invalid/hardcoded; see
+> `artifacts/boundary_probe_rev1.json` / `rev2.json`.
+
 # THE JSON-VALIDATION SUBSYSTEM — component map, boundaries, and cross-boundary state
 
 Scope discipline (per objective): this document studies the subsystem **as an

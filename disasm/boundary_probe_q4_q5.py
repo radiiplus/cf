@@ -1,5 +1,12 @@
-#!/usr/bin/env python3
-"""Boundary probes Q4 (memo scope across a long-lived decoder) and
+"""SUPERSESSION NOTICE (rev round): This file's Q4 escaped-key identity test is INVALID
+(it compared obj['alpha'] (a VALUE) against list(obj.keys())[1] (a KEY)); its Q5
+'doc_is_same_object_as_input: True' was ASSERTED, not measured; full_buffer_retained
+used a lower-bound check. Corrected replacements: disasm/revise_boundary_probes.py ->
+artifacts/boundary_probe_rev1.json (M2/M4) and disasm/rev2_probes.py ->
+artifacts/boundary_probe_rev2.json (M5-corrected + reentrancy). HISTORICAL/UNVERIFIED.
+
+Original header:
+Boundary probes Q4 (memo scope across a long-lived decoder) and
 Q5 (err.doc retention escape). Owned interpreter only; no fs/net/exec."""
 import json, sys
 from json.decoder import JSONDecoder
