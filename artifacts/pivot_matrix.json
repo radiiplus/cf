@@ -1,0 +1,74 @@
+[
+ {
+  "test": "T1 normal valid -> audit",
+  "status": "400",
+  "slot": -2,
+  "fired": []
+ },
+ {
+  "test": "T2 dup key dest user/admin",
+  "status": "400",
+  "slot": -2,
+  "fired": []
+ },
+ {
+  "test": "T3 opcode bytes in note",
+  "status": "400",
+  "slot": -2,
+  "fired": []
+ },
+ {
+  "test": "T4 asm text in note",
+  "status": "400",
+  "slot": -2,
+  "fired": []
+ },
+ {
+  "test": "T5 unknown slot name",
+  "status": "400",
+  "slot": -2,
+  "fired": []
+ },
+ {
+  "test": "T6 role=admin no dest",
+  "status": "400",
+  "slot": -2,
+  "fired": []
+ },
+ {
+  "test": "T7 host/port injection try",
+  "status": "400",
+  "slot": -2,
+  "fired": []
+ },
+ {
+  "test": "T8 peercred spoof fields",
+  "status": "400",
+  "slot": -2,
+  "fired": []
+ },
+ {
+  "test": "T9 shellcode blob value",
+  "status": "400",
+  "slot": -2,
+  "fired": []
+ },
+ {
+  "test": "T10 malformed JSON",
+  "status": "400",
+  "slot": -2,
+  "fired": []
+ },
+ {
+  "test": "T11 path traversal in id",
+  "status": "400",
+  "slot": -2,
+  "fired": []
+ },
+ {
+  "test": "T12 whitespace variant",
+  "status": "400",
+  "slot": -2,
+  "fired": []
+ }
+]

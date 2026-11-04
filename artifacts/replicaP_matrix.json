@@ -1,0 +1,53 @@
+[
+ {
+  "case": "D1 evil->ledger (pairs-first gate?)",
+  "sent": "{\"dest\":\"evil\",\"dest\":\"ledger\",\"amount\":100,\"bizId\":\"d1\"}",
+  "status": 400,
+  "log": [
+   "[OWNER-P] listening 18092",
+   "[S1-AUTH-P] authed=true raw_len=57",
+   "[PAIRS] dest_first=evil amount_first=100",
+   "[MAP]   dest_last=ledger amount_last=100",
+   "[GATE] pairs_allow=false map_allow=true DISAGREE=true"
+  ]
+ },
+ {
+  "case": "D2 ledger->evil",
+  "sent": "{\"dest\":\"ledger\",\"dest\":\"evil\",\"amount\":100,\"bizId\":\"d2\"}",
+  "status": 200,
+  "log": [
+   "[S1-AUTH-P] authed=true raw_len=57",
+   "[PAIRS] dest_first=ledger amount_first=100",
+   "[MAP]   dest_last=evil amount_last=100",
+   "[GATE] pairs_allow=true map_allow=false DISAGREE=true",
+   "[S4-FORWARD-P] forwarded={\"amount\":100,\"bizId\":\"d2\",\"dest\":\"evil\"}",
+   "[WORKER-P] recv={\"amount\":100,\"bizId\":\"d2\",\"dest\":\"evil\"}"
+  ]
+ },
+ {
+  "case": "D3 amount dup 100->999999",
+  "sent": "{\"dest\":\"ledger\",\"amount\":100,\"amount\":999999,\"bizId\":\"d3\"}",
+  "status": 200,
+  "log": [
+   "[S1-AUTH-P] authed=true raw_len=59",
+   "[PAIRS] dest_first=ledger amount_first=100",
+   "[MAP]   dest_last=ledger amount_last=999999",
+   "[GATE] pairs_allow=true map_allow=true DISAGREE=false",
+   "[S4-FORWARD-P] forwarded={\"amount\":999999,\"bizId\":\"d3\",\"dest\":\"ledger\"}",
+   "[WORKER-P] recv={\"amount\":999999,\"bizId\":\"d3\",\"dest\":\"ledger\"}"
+  ]
+ },
+ {
+  "case": "D4 escaped key de\\u0073t after dest",
+  "sent": "{\"dest\":\"ledger\",\"de\\u0073t\":\"evil\",\"amount\":100,\"bizId\":\"d4\"}",
+  "status": 200,
+  "log": [
+   "[S1-AUTH-P] authed=true raw_len=62",
+   "[PAIRS] dest_first=ledger amount_first=100",
+   "[MAP]   dest_last=evil amount_last=100",
+   "[GATE] pairs_allow=true map_allow=false DISAGREE=true",
+   "[S4-FORWARD-P] forwarded={\"amount\":100,\"bizId\":\"d4\",\"dest\":\"evil\"}",
+   "[WORKER-P] recv={\"amount\":100,\"bizId\":\"d4\",\"dest\":\"evil\"}"
+  ]
+ }
+]

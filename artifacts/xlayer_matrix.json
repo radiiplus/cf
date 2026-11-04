@@ -1,0 +1,82 @@
+[
+ {
+  "id": "X1",
+  "layer": "lifetime",
+  "question": "Does a retained object outlive whole-document rejection?",
+  "observation": "verdict=reject (Expecting property name enclosed in double quotes@43); hook fired 1x; registry now holds [\"{'user': 'alice', 'action': 'grant'}\"]",
+  "label": "PROVEN",
+  "security_consequence": "Side effect of a REJECTED request persists in shared state; rejection does not reverse producer-visible effects made by hooks."
+ },
+ {
+  "id": "X2",
+  "layer": "identity",
+  "question": "Equal-value/different-bytes requests: same identity to all layers?",
+  "observation": "dicts equal=True, distinct objects=True, raw hashes 116d00451a02 vs 5b97236733f3; value-keyed store collapses second=True",
+  "label": "PROVEN",
+  "security_consequence": "A value-keyed idempotency/dedup store treats byte-different requests as one; a raw-byte-keyed audit or HMAC check treats them as two. Same logical request, inconsistent cross-layer identity."
+ },
+ {
+  "id": "X3",
+  "layer": "representation",
+  "question": "Can a pairs-based consumer and a dict-based consumer select different routes?",
+  "observation": "pairs=[('dest', 'worker'), ('dest', 'audit')], dict dest=audit, pairs-first dest=worker, agree=False",
+  "label": "PROVEN (mechanism) / UNKNOWN (any real service mixing consumers)",
+  "security_consequence": "Only harmful if one component iterates pairs and another indexes the dict. CPython default config makes both last-wins; divergence needs mixed consumer styles -- none found in peershim (single strstr scan)."
+ },
+ {
+  "id": "X4",
+  "layer": "normalization",
+  "question": "Can lossy decode or unicode normalization collide distinct inputs onto one allowed slot?",
+  "observation": "replace-decode hits=[('clean audit', True), ('invalid byte inside', False), ('literal U+FFFD before audit', False), ('noop', True)]; NFKC+casefold collisions with 'audit': [('AUDIT', 'audit', True), ('Audit', 'audit', True), ('audit\\u200b', 'audit', True), ('audit', 'audit', True)]",
+  "label": "PROVEN (fullwidth '\uff41\uff55\uff44\uff49\uff54' normalizes to 'audit')",
+  "security_consequence": "IF a stack applies NFKC/casefold before allow-listing, non-obvious spellings reach the 'audit' slot while an audit LOG written pre-normalization shows a different name -> log/decision mismatch. peershim uses strcmp (no normalization): slot unreachable that way. MASKED in shim."
+ },
+ {
+  "id": "X5",
+  "layer": "ordering",
+  "question": "Does an in-place-mutating hook change what later validators see?",
+  "observation": "raw said dest='evil'; final object says dest='audit' (same object mutated by hook)",
+  "label": "PROVEN (mechanism)",
+  "security_consequence": "A pre-parse audit record (raw bytes) and a post-parse decision (mutated object) describe DIFFERENT requests. Any component holding the pre-hook view is now desynchronized from the consumer."
+ },
+ {
+  "id": "X6",
+  "layer": "representation",
+  "question": "Do numeric values survive parse->store->reserialize exactly?",
+  "observation": "1e18 -> {\"amount\": 1e+18} int-exact=False; 2^53+1 -> 9007199254740993 (drift=False)",
+  "label": "PROVEN",
+  "security_consequence": "Amount-like fields routed by float then forwarded by reserialized text can differ from the validated value across a JS/JSON hop (Node/V8 number domain). Relevant to worker MAC over reserialized bytes."
+ },
+ {
+  "id": "X7",
+  "layer": "interpretation",
+  "question": "Do the strict parser and the shim's strstr scanner extract DIFFERENT dest values?",
+  "observation": "b'{\"dest\":\"audit\",\"de\\\\u0073t\":\"worker\"}': strict=worker shim=audit agree=False; b'{\"dest\":\"a\\\\u0075dit\"}': strict=audit shim=a0075dit agree=False; b'{\"prefixdest\":\"x\",\"dest\":\"audit\"}': strict=audit shim=audit agree=True; b'{\"dest\":\"worker\"}garbage{\"dest\":\"audit\"}': strict=<strict-reject:JSONDecodeError> shim=worker agree=False; b'{\"dest\\\\\":\\\\\"audit\\\\\"}\"; {\"dest\":\"worker\"}': strict=<strict-reject:JSONDecodeError> shim=worker agree=False",
+  "label": "PROVEN (divergence exists between parsers on these inputs)",
+  "security_consequence": "Two-parser systems (validate here, forward there) can act on different field values from ONE byte stream. See xlayer results for which rows diverge."
+ },
+ {
+  "id": "X8",
+  "layer": "shared-state",
+  "question": "Non-standard literals accepted by parser -> representable downstream?",
+  "observation": "parsed={'amount': nan}; strict re-dump=ValueError: Out of range float values are not JSON compliant: nan",
+  "label": "PROVEN",
+  "security_consequence": "Acceptance at L1 does not guarantee serializability at L5. A worker MAC computed over reserialized bytes fails/mutates only AFTER the request was already counted valid -- ordering asymmetry."
+ },
+ {
+  "id": "X9",
+  "layer": "interpretation",
+  "question": "Does a BOM reject at the JSON gate while a substring scanner still routes?",
+  "observation": "python json: reject JSONDecodeError; shim strstr would find \"dest\": True",
+  "label": "PROVEN (mechanism divergence)",
+  "security_consequence": "If HTTP framing strips/keeps the BOM differently than the validator does, one layer 400s while another forwards. Unreachable in peershim because its ONLY gate is the strstr scanner (no strict parser)."
+ },
+ {
+  "id": "X10",
+  "layer": "authorization",
+  "question": "Can request data define the authorization principal?",
+  "observation": "body carries uid/role={'uid': 0, 'role': 'admin', 'dest': 'audit'}; kernel SO_PEERCRED is a separate channel (see peershim deliver_to_slot: uc.uid/uc.pid never read from JSON)",
+  "label": "PROVEN in shim / MASKED for real services behind TLS proxies",
+  "security_consequence": "In shim, role is echoed but never feeds privilege. Real deployments behind L7 proxies lose kernel peercred entirely; principal then depends on forwarded headers -- a DIFFERENT trust channel, untested here."
+ }
+]

@@ -1,0 +1,621 @@
+[
+ {
+  "id": "N1",
+  "class": "normal",
+  "note": "valid flat object",
+  "len": 7,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'a': 1}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'a': 1}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"a\": 1}"
+ },
+ {
+  "id": "N2",
+  "class": "normal",
+  "note": "valid nested",
+  "len": 19,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'a': {'b': [1, 2, 3]}}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'b': [1, 2, 3]}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'b': [1, 2, 3]}}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"a\": {\"b\": [1, 2, 3]}}"
+ },
+ {
+  "id": "N3",
+  "class": "normal",
+  "note": "trailing comma (invalid)",
+  "len": 8,
+  "utf8": "ok",
+  "parse": "JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 8 (char 7)",
+  "hooks_before_verdict": [],
+  "slot_selected": null,
+  "roundtrip": "null"
+ },
+ {
+  "id": "N4",
+  "class": "normal",
+  "note": "child ok then outer broken",
+  "len": 12,
+  "utf8": "ok",
+  "parse": "JSONDecodeError: Expecting value: line 1 column 13 (char 12)",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "null"
+ },
+ {
+  "id": "O1",
+  "class": "opcode",
+  "note": "NOP sled inside string",
+  "len": 75,
+  "utf8": "ok",
+  "parse": "JSONDecodeError: Invalid \\escape: line 1 column 10 (char 9)",
+  "hooks_before_verdict": [],
+  "slot_selected": null,
+  "roundtrip": "null"
+ },
+ {
+  "id": "O2",
+  "class": "opcode",
+  "note": "raw NOP bytes as whole body",
+  "len": 24,
+  "utf8": "REJECT invalid start byte@6",
+  "parse": "accept",
+  "value_repr": "{'n': '\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'n': '\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"n\": \"\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\"}"
+ },
+ {
+  "id": "O3",
+  "class": "opcode",
+  "note": "INT3 0xCC in value",
+  "len": 11,
+  "utf8": "REJECT invalid continuation byte@7",
+  "parse": "accept",
+  "value_repr": "{'v': 'A\ufffdB'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'v': 'A\ufffdB'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"v\": \"A\ufffdB\"}"
+ },
+ {
+  "id": "O4",
+  "class": "opcode",
+  "note": "SYSCALL bytes 0F 05 in key",
+  "len": 9,
+  "utf8": "ok",
+  "parse": "JSONDecodeError: Invalid control character at: line 1 column 3 (char 2)",
+  "hooks_before_verdict": [],
+  "slot_selected": null,
+  "roundtrip": "null"
+ },
+ {
+  "id": "O5",
+  "class": "opcode",
+  "note": "int 0x80 form CD 80",
+  "len": 10,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'v': '\u0340'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'v': '\u0340'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"v\": \"\u0340\"}"
+ },
+ {
+  "id": "O6",
+  "class": "opcode",
+  "note": "execve-style shellcode blob",
+  "len": 112,
+  "utf8": "ok",
+  "parse": "JSONDecodeError: Invalid \\escape: line 1 column 7 (char 6)",
+  "hooks_before_verdict": [],
+  "slot_selected": null,
+  "roundtrip": "null"
+ },
+ {
+  "id": "O7",
+  "class": "opcode",
+  "note": "real bytes of above (unescaped)",
+  "len": 17,
+  "utf8": "REJECT invalid start byte@8",
+  "parse": "JSONDecodeError: Invalid control character at: line 1 column 12 (char 11)",
+  "hooks_before_verdict": [],
+  "slot_selected": null,
+  "roundtrip": "null"
+ },
+ {
+  "id": "A1",
+  "class": "asm",
+  "note": "AT&T snippet as string value",
+  "len": 35,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'src': 'movq $60, %rax\\nsyscall\\n'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'src': 'movq $60, %rax\\nsyscall\\n'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"src\": \"movq $60, %rax\\nsyscall\\n\"}"
+ },
+ {
+  "id": "A2",
+  "class": "asm",
+  "note": "NASM line with $ and ;",
+  "len": 58,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'src': 'section .text\\n_start: mov eax, 0x3c ; exit\\nhlt'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'src': 'section .text\\n_start: mov eax, 0x3c ; exit\\nhlt'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"src\": \"section .text\\n_start: mov eax, 0x3c ; exit\\nhlt\"}"
+ },
+ {
+  "id": "A3",
+  "class": "asm",
+  "note": "asm containing quote/backslash chaos",
+  "len": 44,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'src': 'db 0x0f, 0x05 ; \"syscall\" \\\\ end'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'src': 'db 0x0f, 0x05 ; \"syscall\" \\\\ end'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"src\": \"db 0x0f, 0x05 ; \\\"syscall\\\" \\\\ end\"}"
+ },
+ {
+  "id": "B1",
+  "class": "binary",
+  "note": "NUL byte inside string",
+  "len": 11,
+  "utf8": "ok",
+  "parse": "JSONDecodeError: Invalid control character at: line 1 column 8 (char 7)",
+  "hooks_before_verdict": [],
+  "slot_selected": null,
+  "roundtrip": "null"
+ },
+ {
+  "id": "B2",
+  "class": "binary",
+  "note": "whole body starts with NUL",
+  "len": 8,
+  "utf8": "ok",
+  "parse": "JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
+  "hooks_before_verdict": [],
+  "slot_selected": null,
+  "roundtrip": "null"
+ },
+ {
+  "id": "B3",
+  "class": "binary",
+  "note": "invalid UTF-8 continuation",
+  "len": 10,
+  "utf8": "REJECT invalid start byte@6",
+  "parse": "accept",
+  "value_repr": "{'v': '\ufffd\ufffd'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'v': '\ufffd\ufffd'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"v\": \"\ufffd\ufffd\"}"
+ },
+ {
+  "id": "B4",
+  "class": "binary",
+  "note": "lone surrogate escape",
+  "len": 14,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'v': '\\ud800'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'v': '\\ud800'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"v\": \"\ud800\"}"
+ },
+ {
+  "id": "B5",
+  "class": "binary",
+  "note": "surrogate pair -> emoji",
+  "len": 20,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'v': '\ud83d\ude00'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'v': '\ud83d\ude00'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"v\": \"\ud83d\ude00\"}"
+ },
+ {
+  "id": "B6",
+  "class": "binary",
+  "note": "overlong \\u002f escape",
+  "len": 12,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'v': '/ok'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'v': '/ok'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"v\": \"/ok\"}"
+ },
+ {
+  "id": "B7",
+  "class": "binary",
+  "note": "half UTF-8 truncated",
+  "len": 8,
+  "utf8": "REJECT unexpected end of data@6",
+  "parse": "JSONDecodeError: Unterminated string starting at: line 1 column 6 (char 5)",
+  "hooks_before_verdict": [],
+  "slot_selected": null,
+  "roundtrip": "null"
+ },
+ {
+  "id": "B8",
+  "class": "binary",
+  "note": "latin1 high bytes",
+  "len": 12,
+  "utf8": "REJECT invalid continuation byte@9",
+  "parse": "accept",
+  "value_repr": "{'v': 'caf\ufffd'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'v': 'caf\ufffd'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"v\": \"caf\ufffd\"}"
+ },
+ {
+  "id": "B9",
+  "class": "binary",
+  "note": "CRLF+LF mix, BOM prefix",
+  "len": 12,
+  "utf8": "ok",
+  "parse": "JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)",
+  "hooks_before_verdict": [],
+  "slot_selected": null,
+  "roundtrip": "null"
+ },
+ {
+  "id": "B10",
+  "class": "binary",
+  "note": "huge depth 100k",
+  "len": 200000,
+  "utf8": "ok",
+  "parse": "RecursionError: maximum recursion depth exceeded while decoding a JSON array from a unicode stri",
+  "hooks_before_verdict": [],
+  "slot_selected": null,
+  "roundtrip": "null"
+ },
+ {
+  "id": "B11",
+  "class": "binary",
+  "note": "duplicate keys",
+  "len": 30,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'role': 'admin'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'role': 'admin'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"role\": \"admin\"}"
+ },
+ {
+  "id": "B12",
+  "class": "binary",
+  "note": "NaN/Infinity non-standard",
+  "len": 22,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'v': nan, 'w': inf}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'v': nan, 'w': inf}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"v\": NaN, \"w\": Infinity}"
+ },
+ {
+  "id": "B13",
+  "class": "binary",
+  "note": "deeply nested unknown object",
+  "len": 302,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': ",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{}"
+   ],
+   [
+    "object_hook",
+    "{'a': {}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ],
+   [
+    "object_hook",
+    "{'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {'a': {}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"a\": {\"a\": {\"a\": {\"a\": {\"a\": {\"a\": {\"a\": {\"a\": {\"a\": {\"a\": {\"a\": {\"a\": {\"a\": {\"a\": {\"a\": {\"a\": {\"a\""
+ },
+ {
+  "id": "B14",
+  "class": "binary",
+  "note": "class-hint style keys",
+  "len": 48,
+  "utf8": "ok",
+  "parse": "accept",
+  "value_repr": "{'@type': 'jar:http://x', '__class__': 'os.system'}",
+  "hooks_before_verdict": [
+   [
+    "object_hook",
+    "{'@type': 'jar:http://x', '__class__': 'os.system'}"
+   ]
+  ],
+  "slot_selected": null,
+  "roundtrip": "{\"@type\": \"jar:http://x\", \"__class__\": \"os.system\"}"
+ }
+]

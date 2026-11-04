@@ -1,0 +1,117 @@
+{
+ "results": [
+  {
+   "id": "P1",
+   "desc": "valid dest baseline",
+   "body": "{\"dest\":\"audit\",\"id\":\"1\",\"note\":\"hello\"}",
+   "status": "200",
+   "slot": "0",
+   "forwarded": "{\"dest\":\"audit"
+  },
+  {
+   "id": "P2",
+   "desc": "dup dest worker->audit",
+   "body": "{\"dest\":\"worker\",\"dest\":\"audit\",\"id\":\"2\"}",
+   "status": "200",
+   "slot": "1",
+   "forwarded": "{\"dest\":\"worker"
+  },
+  {
+   "id": "P3",
+   "desc": "escaped-key alias de\\u0073t",
+   "body": "{\"dest\":\"audit\",\"de\\u0073t\":\"worker\",\"id\":\"3\"}",
+   "status": "200",
+   "slot": "0",
+   "forwarded": "{\"dest\":\"audit"
+  },
+  {
+   "id": "P4",
+   "desc": "decoy prefixdest before dest",
+   "body": "{\"prefixdest\":\"zzz\",\"dest\":\"audit\",\"id\":\"4\"}",
+   "status": "200",
+   "slot": "0",
+   "forwarded": "{\"dest\":\"audit"
+  },
+  {
+   "id": "P5",
+   "desc": "BOM prefix",
+   "body": "\ufeff{\"dest\":\"audit\",\"id\":\"5\"}",
+   "status": "200",
+   "slot": "0",
+   "forwarded": "{\"dest\":\"audit"
+  },
+  {
+   "id": "P6a",
+   "desc": "NOP bytes in note",
+   "body": "{\"dest\":\"audit\",\"id\":\"6\",\"note\":\"\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\"}",
+   "status": "200",
+   "slot": "0",
+   "forwarded": "{\"dest\":\"audit"
+  },
+  {
+   "id": "P6b",
+   "desc": "syscall asm text in note",
+   "body": "{\"dest\":\"audit\",\"id\":\"6\",\"note\":\"mov $60,%rax; syscall\"}",
+   "status": "200",
+   "slot": "0",
+   "forwarded": "{\"dest\":\"audit"
+  },
+  {
+   "id": "P7",
+   "desc": "role/uid spoof fields",
+   "body": "{\"dest\":\"audit\",\"id\":\"7\",\"role\":\"admin\",\"uid\":0}",
+   "status": "200",
+   "slot": "0",
+   "forwarded": "{\"dest\":\"audit"
+  },
+  {
+   "id": "P8",
+   "desc": "path traversal in id",
+   "body": "{\"dest\":\"audit\",\"id\":\"../../etc/passwd\"}",
+   "status": "200",
+   "slot": "0",
+   "forwarded": "{\"dest\":\"audit"
+  },
+  {
+   "id": "P9",
+   "desc": "unknown slot",
+   "body": "{\"dest\":\"evil\",\"id\":\"9\"}",
+   "status": "400",
+   "slot": "-2",
+   "forwarded": "{\"dest\":\"audit"
+  },
+  {
+   "id": "P10",
+   "desc": "equal-value diff-bytes (whitespace)",
+   "body": "{ \"dest\" : \"audit\" , \"id\" : \"1\" , \"note\" : \"hello\" }",
+   "status": "200",
+   "slot": "0",
+   "forwarded": "{\"dest\":\"audit"
+  },
+  {
+   "id": "P11",
+   "desc": "amount 2^53+1 passthrough",
+   "body": "{\"dest\":\"audit\",\"id\":\"11\",\"amount\":9007199254740993}",
+   "status": "200",
+   "slot": "0",
+   "forwarded": "{\"dest\":\"audit"
+  }
+ ],
+ "received": {
+  "19100": [
+   "{\"dest\":\"audit\",\"id\":\"1\",\"note\":\"hello\"}",
+   "{\"dest\":\"audit\",\"id\":\"3\",\"note\":\"\"}",
+   "{\"dest\":\"audit\",\"id\":\"4\",\"note\":\"\"}",
+   "{\"dest\":\"audit\",\"id\":\"5\",\"note\":\"\"}",
+   "{\"dest\":\"audit\",\"id\":\"6\",\"note\":\"\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\"}",
+   "{\"dest\":\"audit\",\"id\":\"6\",\"note\":\"mov $60,%rax; syscall\"}",
+   "{\"dest\":\"audit\",\"id\":\"7\",\"note\":\"\"}",
+   "{\"dest\":\"audit\",\"id\":\"../../etc/passwd\",\"note\":\"\"}",
+   "{\"dest\":\"audit\",\"id\":\"1\",\"note\":\"hello\"}",
+   "{\"dest\":\"audit\",\"id\":\"11\",\"note\":\"\"}"
+  ],
+  "19101": [
+   "{\"dest\":\"worker\",\"id\":\"2\",\"note\":\"\"}"
+  ]
+ }
+}
