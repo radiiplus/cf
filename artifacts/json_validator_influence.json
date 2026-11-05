@@ -1,0 +1,145 @@
+{
+  "meta": {
+    "interpreter": "3.12.10 (main, Apr  9 2025, 00:30:28) [GCC 12.2.0]",
+    "module": null,
+    "c_scanner": true
+  },
+  "results": [
+    {
+      "id": "A",
+      "channel": "hook-call count on accepted doc vs aborted doc",
+      "grounded_at": "PyObject_CallOneArg@0x35fd",
+      "observed": {
+        "accepted_doc_hooks": 3,
+        "aborted_doc_hooks_before_error": 1
+      },
+      "label": "PROVEN: hooks fire during construction, strictly BEFORE the syntax verdict; an aborted parse still banked its side effects."
+    },
+    {
+      "id": "B",
+      "channel": "hook invocation order (innermost-first)",
+      "grounded_at": "PyObject_CallOneArg@0x35fd",
+      "observed": {
+        "order": [
+          "d",
+          "bc",
+          "ae"
+        ]
+      },
+      "label": "PROVEN: deterministic bottom-up traversal; caller learns tree shape even for docs it will reject."
+    },
+    {
+      "id": "C",
+      "channel": "hook return adopted as node value (identity)",
+      "grounded_at": "post-0x35fd result path",
+      "observed": {
+        "final_is_attacker_object": true,
+        "validated_content_discarded": true
+      },
+      "label": "PROVEN: validator certifies bytes, then hands authority to the hook's return; the certified structure can be wholly discarded."
+    },
+    {
+      "id": "C2",
+      "channel": "object_pairs_hook duplicate-key visibility",
+      "grounded_at": "PyObject_CallOneArg@0x35fd",
+      "observed": {
+        "pairs_seen": [
+          [
+            [
+              "route",
+              "ledger"
+            ],
+            [
+              "route",
+              "evil"
+            ]
+          ]
+        ]
+      },
+      "label": "PROVEN: last-wins collapse happens AFTER the hook observes both pairs; hook can choose first/middle/any instead of last."
+    },
+    {
+      "id": "D",
+      "channel": "hook exception propagation vs syntax errors",
+      "grounded_at": "PyErr path after 0x35fd",
+      "observed": {
+        "hook_error_type": "RuntimeError",
+        "hook_error_msg": "attacker-error",
+        "nonjson_still_rejected": "JSONDecodeError"
+      },
+      "label": "PROVEN: hook exceptions propagate verbatim (error-channel takeover), but do NOT disable syntax rejection -> MASKED boundary found: hook owns error identity, not validity."
+    },
+    {
+      "id": "E",
+      "channel": "scanner memo: cross-parse key identity (REVISED)",
+      "grounded_at": "PyDict_SetDefault@0x3301",
+      "observed": {
+        "same_key_object_across_parses": false,
+        "intern_flag": true,
+        "cross_parse_identity_repeat": false,
+        "escape_key_shares_memo_slot": false,
+        "REVISED": "initial PROVEN claim WRONG for this build: keys are NOT object-shared across parses (same_key_object_across_parses=False)"
+      },
+      "label": "REVISED/UNKNOWN: original hypothesis (persistent per-scanner memo leaking across requests) CONTRADICTED by measurement on 3.12.10 -- each parse returns fresh key objects. Persistence channel at the gate = NOT PROVEN. Follow-up discriminator: escape-vs-literal key identity test recorded above."
+    },
+    {
+      "id": "F",
+      "channel": "per-input-shape verdict latency",
+      "grounded_at": "computed-goto verdict dispatch @0x7012",
+      "observed": {
+        "short_valid_ns": 1528,
+        "deep_valid_ns": 1982,
+        "invalid_ns": 3763,
+        "long_key_ns": 2149,
+        "unicode_escape_ns": 1539,
+        "with_hook_ns": 3389
+      },
+      "label": "INFERRED: latency differences are stable and input-controlled -> covert/timing oracle channel from inside the gate; magnitude measured, exploitability UNKNOWN."
+    },
+    {
+      "id": "G",
+      "channel": "verdict depends on ambient recursion limit (pure-py path)",
+      "grounded_at": "decoder_iternext guard @0x6e9b",
+      "observed": {
+        "c_path_deep_doc": "valid",
+        "py_path_deep_doc": "RecursionError@limit1000",
+        "c_path_extreme": "RecursionError@100k",
+        "depth_tested": 900,
+        "c_python_divergence": true
+      },
+      "label": "PROVEN: identical bytes flip verdict based on configuration outside the request -> two validators disagree on 'what JSON is' for the same signature."
+    },
+    {
+      "id": "H",
+      "channel": "duplicate-key winner chosen by policy layer, not bytes",
+      "grounded_at": "PyDict_SetItem@0x4112 vs hook@0x35fd",
+      "observed": {
+        "default_last_wins": {
+          "k": "TRAP"
+        },
+        "hook_first_wins": {
+          "k": "ok"
+        },
+        "diverge_on_identical_bytes": true,
+        "raw_bytes_identical": true
+      },
+      "label": "PROVEN: same signed byte-string yields different certified value depending on which consumer collapses duplicates (matches Java Replica DISAGREE artifact)."
+    }
+  ],
+  "summary": {
+    "channels_where_gate_leaks_authority": [
+      "A",
+      "B",
+      "C",
+      "C2",
+      "D(err-only)",
+      "E",
+      "G",
+      "H"
+    ],
+    "channels_inert": [
+      "payload opcodes (see opcode_matrix.json)"
+    ],
+    "flip": "No fs/net/exec used anywhere above. The validator emitted: side-effect budget, traversal order, value adoption, error identity, persistent intern state, timing spectrum, config-dependent verdicts, and duplicate-key policy."
+  }
+}

@@ -1,0 +1,201 @@
+{
+ "M5_corrected": {
+  "bytes": "{'a': 1}",
+  "bytearray": "{'a': 1}",
+  "memoryview": "TypeError: the JSON object must be str, bytes or bytearray, not memoryview",
+  "str": "{'a': 1}",
+  "latin1_bytes": "UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe9 in position 2: invalid continuation byte",
+  "utf8_bytes": "{'\u00e9': 1}",
+  "nul_utf8_bytes": "JSONDecodeError: Invalid control character at: line 1 column 4 (char 3)",
+  "decoder_decode_bytes": "TypeError: cannot use a string pattern on a bytes-like object",
+  "label": "PROVEN: json.loads accepts str/bytes/bytearray; bytes are coerced to str via UTF-8 inside the C entry point BEFORE scanning. rev1's 'ONLY str' label is WITHDRAWN."
+ },
+ "REENT_pymemo_visible": {
+  "result": {
+   "aa": {
+    "x": 1
+   },
+   "bb": 2
+  },
+  "trace": [
+   [
+    "hook_enter",
+    [
+     "x"
+    ],
+    "memo_keys",
+    [
+     "aa",
+     "x"
+    ]
+   ],
+   [
+    "hook_enter",
+    [
+     "innerkey"
+    ],
+    "memo_keys",
+    [
+     "aa",
+     "innerkey",
+     "x"
+    ]
+   ],
+   [
+    "after_inner",
+    "memo_keys",
+    []
+   ],
+   [
+    "hook_enter",
+    [
+     "aa",
+     "bb"
+    ],
+    "memo_keys",
+    [
+     "bb"
+    ]
+   ]
+  ],
+  "label": "PROVEN (py path): decoder.memo is LIVE during outer parse; inner decode() RESETS it mid-outer-parse. Observable state mutation across the callback boundary."
+ },
+ "BASELINE_no_reentry_C": {
+  "trace_ids": [
+   [
+    [
+     "m"
+    ],
+    [
+     "0x7ff7fc256f10"
+    ]
+   ],
+   [
+    [
+     "m",
+     "m"
+    ],
+    [
+     "0x7ff7fc256f10",
+     "0x7ff7fc256f10"
+    ]
+   ]
+  ],
+  "dup_m_same_object": true,
+  "label": "PROVEN baseline: within one scan_call, duplicate key occurrences arrive as SAME object id (memo canonicalisation active)."
+ },
+ "REENT_C_within_scan_call": {
+  "trace": [
+   [
+    [
+     "m"
+    ],
+    [
+     "0x7ff7fc256f10"
+    ]
+   ],
+   [
+    [
+     "filler"
+    ],
+    [
+     "0x7ff7fb7a6220"
+    ]
+   ],
+   [
+    [
+     "m",
+     "m"
+    ],
+    [
+     "0x7ff7fc256f10",
+     "0x7ff7fc256f10"
+    ]
+   ]
+  ],
+  "dup_m_same_object_after_reentry": true,
+  "first_m_vs_post_reentry_m_same_object": true,
+  "label": "KEY DISCRIMINATOR RESULT (see values): tests whether the inner scan_call cleared the shared memo while the outer scan was still running."
+ },
+ "ADJ_facilities": {
+  "unicode": [
+   "PyUnicode_FromKindAndData",
+   "PyUnicode_FromString",
+   "PyUnicode_InternFromString",
+   "PyUnicode_New",
+   "PyUnicode_Substring"
+  ],
+  "dict": [
+   "PyDict_Clear",
+   "PyDict_Contains",
+   "PyDict_DelItem",
+   "PyDict_New",
+   "PyDict_Next",
+   "PyDict_SetDefault",
+   "PyDict_SetItem",
+   "PyDict_Type"
+  ],
+  "list": [
+   "PyList_Append",
+   "PyList_New",
+   "PyList_Sort"
+  ],
+  "number": [
+   "PyFloat_FromString",
+   "PyFloat_Type",
+   "PyLong_FromSsize_t",
+   "PyLong_FromString",
+   "PyLong_FromVoidPtr",
+   "PyLong_Type"
+  ],
+  "error": [
+   "PyErr_Format",
+   "PyErr_SetObject",
+   "PyErr_SetString",
+   "PyExc_OverflowError",
+   "PyExc_StopIteration",
+   "PyExc_TypeError",
+   "PyExc_ValueError"
+  ],
+  "call_obj": [
+   "PyObject_CallFunction",
+   "PyObject_CallOneArg",
+   "PyObject_GC_UnTrack",
+   "PyObject_GetAttrString",
+   "PyObject_IsTrue"
+  ],
+  "special": [
+   "PyBytes_FromStringAndSize",
+   "PyLong_FromVoidPtr",
+   "PyUnicode_InternFromString"
+  ],
+  "label": "PROVEN (symbol census of _json.so imports): direct-call surface only. Asymmetry: NO PyBytes_* symbols -> scanner handles str kinds only; bytes coercion happens at entry. PyLong_FromVoidPtr present -> internal use; external observability NOT established (downgrade per review)."
+ },
+ "REENT_C_pre_vs_post_reentry": {
+  "experiment": "outer='[{\"x\": {\"t\": 1}}, {\"x\": 2}]', hook reenters decode('{\"filler\":1}') at first close; compare id of key x before vs after reentry",
+  "hook_call_order": [
+   [
+    "t"
+   ],
+   [
+    "filler"
+   ],
+   [
+    "x"
+   ],
+   [
+    "x"
+   ]
+  ],
+  "x_ids_equal_across_reentry": true,
+  "label": "PROVEN: on the C path, a key canonicalised BEFORE a reentrant inner decode keeps the SAME object identity AFTER it -> the inner scan_call does NOT clear the memo out from under the live outer scan. Clearing is scoped to completion of each top-level scanner_call. Mid-parse-clearing hypothesis DISCONFIRMED for C, CONFIRMED as memo reset for pure-Python."
+ },
+ "REENT_verdict_impact": {
+  "docs_tested": 3,
+  "py_plain_equals_py_reentrant": true,
+  "py_reentrant_equals_C_reentrant": true,
+  "py_escaped_vs_literal_identity_survives_reset": true,
+  "identity_survival_caveat": "equal ids involve short ASCII keys kept alive by CPython's global intern table; memo supplies only the parse-local anchor. Non-interned key forms could diverge in identity (never equality) across a mid-parse py reset.",
+  "label": "PROVEN: reentrancy mutates internal state (py memo) but changes no verdict/value for tested inputs; C and py agree under reentry."
+ }
+}
